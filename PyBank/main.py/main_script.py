@@ -8,10 +8,7 @@ csvpath = os.path.join("..", "Resources", "budget_data.csv")
 
 months = []
 profit_loss = []
-greatestIncTotal = 0
-greatestIncDate = []
-greatestDecTotal = 0
-greatestDecDate = []
+
 
 # Setting Fuction
 
@@ -35,28 +32,62 @@ with open(csvpath) as csvfile:
         months.append(row[0])
         profit_loss.append(int(row[1]))
 
-        value = int(row[1])
-        
-        if greatestIncTotal < value:
-            greatestIncTotal = value
-            greatestIncDate = row[0]
 
-        if greatestDecTotal > value:
-            greatestDecTotal = value
-            greatestDecDate = row[0]
-
-    
     # Count for Months
     total_months = len(months)
+
+    #total profit and loss
+
+    total_profit_loss = sum(profit_loss)
+
+    # Month to Month Change
+
+    x = 1
+    y = 0
+
+    changes= []
+
+    for month in range(total_months - 1):
+        monthly_average = (profit_loss[x] - profit_loss[y])
+        changes.append(int(monthly_average))
+        x+=1
+        y+=1
     
-    # Monthly Average Syntax
-    monthly_average = mean(profit_loss)
-
-    print(total_months)
-    print(monthly_average)
-    print(greatestDecDate, greatestDecTotal)
-    print(greatestIncDate, greatestIncTotal)
+    avg_monthly_change = round(sum(changes)/(total_months -1), 2)
 
 
+    # Max and Min
+
+    min_change = min(changes)
+    max_change = max(changes)
+
+    change_max = changes.index(max_change)
+    change_min = changes.index(min_change)
+
+    min_month = months[change_min +1]
+    max_month = months[change_max +1]
+    
+    # Output for Script
+  
+    print("----------------------------------------------------------")
+    print("Financial Analysis")
+    print("----------------------------------------------------------")
+    print("Total Months: " + str(total_months))
+    print("Total Profits: " + "$" + str(total_profit_loss))
+    print("Average Change: " + "$" + str(int(avg_monthly_change)))
+    print("Greatest Increase in Profits: " + str(max_month) + " ($" + str(int(max_change)) + ")")
+    print("Greatest Decrease in Profits: " + str(min_month) + " ($" + str(int(min_change)) + ")")
+    print("----------------------------------------------------------")
+    
+with open('financial_analysis.txt', 'w') as text:
+    text.write("----------------------------------------------------------\n")
+    text.write("  Financial Analysis"+ "\n")
+    text.write("----------------------------------------------------------\n\n")
+    text.write("    Total Months: " + str(total_months) + "\n")
+    text.write("    Total Profits: " + "$" + (str(total_profit_loss)) +"\n")
+    text.write("    Average Change: " + '$' + str(int(avg_monthly_change)) + "\n")
+    text.write("    Greatest Increase in Profits: " + str(max_month) + " ($" + str(int(max_change)) + ")\n")
+    text.write("    Greatest Decrease in Profits: " + str(min_month) + " ($" + str(int(min_change)) + ")\n")
+    text.write("----------------------------------------------------------\n")
 
 
